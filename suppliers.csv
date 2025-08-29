@@ -1,0 +1,8 @@
+supplier_id,supplier_name,region,city,iso_9001,iso_14001,audit_score,lead_time_days,aql_level,ppap_status,capability_index_est,preferred_supplier
+S1175,VistaCore BV,EU,Brno,True,True,90.56,11,1.0,APPROVED,1.32,True
+S5002,PrecisionOptics S.p.A.,APAC,Pune,True,False,83.9,13,0.65,APPROVED,1.14,False
+S6577,LuminaTech S.p.A.,APAC,Pune,True,True,83.9,23,1.0,NONE,1.14,False
+S4428,PrecisionOptics Co.,EU,Lodz,True,True,90.56,8,1.0,SUBMITTED,1.32,True
+S7142,Photonica GmbH,APAC,Tokyo,True,True,83.9,25,0.65,APPROVED,1.14,False
+S2713,ZenOptic Co.,EU,Brno,True,False,90.56,12,1.0,APPROVED,1.32,True
+S3320,ClearSight S.p.A.,APAC,Hsinchu,True,False,83.9,15,1.5,APPROVED,1.14,False

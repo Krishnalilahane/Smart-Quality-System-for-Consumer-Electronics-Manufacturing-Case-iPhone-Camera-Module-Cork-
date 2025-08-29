@@ -1,0 +1,349 @@
+{
+  "suppliers.csv": {
+    "description": "Supplier master for camera module components",
+    "columns": [
+      {
+        "name": "supplier_id",
+        "type": "string",
+        "format": "S####",
+        "desc": "Unique supplier code"
+      },
+      {
+        "name": "supplier_name",
+        "type": "string",
+        "desc": "Company name"
+      },
+      {
+        "name": "region",
+        "type": "category",
+        "values": [
+          "EU",
+          "APAC"
+        ],
+        "desc": "Supplier region"
+      },
+      {
+        "name": "city",
+        "type": "string",
+        "desc": "City (typos normalized)"
+      },
+      {
+        "name": "iso_9001",
+        "type": "bool",
+        "desc": "Quality management certification"
+      },
+      {
+        "name": "iso_14001",
+        "type": "bool",
+        "desc": "Environmental management certification"
+      },
+      {
+        "name": "audit_score",
+        "type": "float",
+        "range": "0-100",
+        "desc": "Latest process audit score (imputed by region median if missing)"
+      },
+      {
+        "name": "lead_time_days",
+        "type": "int",
+        "range": "5-29",
+        "desc": "Avg production+logistics lead time"
+      },
+      {
+        "name": "aql_level",
+        "type": "float",
+        "values": [
+          0.65,
+          1.0,
+          1.5,
+          2.5
+        ],
+        "desc": "AQL sampling level"
+      },
+      {
+        "name": "ppap_status",
+        "type": "category",
+        "values": [
+          "NONE",
+          "SUBMITTED",
+          "APPROVED"
+        ],
+        "desc": "PPAP status"
+      },
+      {
+        "name": "capability_index_est",
+        "type": "float",
+        "range": "0.8-1.8",
+        "desc": "Estimated Cpk proxy"
+      },
+      {
+        "name": "preferred_supplier",
+        "type": "bool",
+        "desc": "Preferred supplier flag"
+      }
+    ]
+  },
+  "incoming_inspection.csv": {
+    "description": "IQC daily lots with CTQ measures and acceptance decisions",
+    "columns": [
+      {
+        "name": "date",
+        "type": "date",
+        "format": "YYYY-MM-DD",
+        "desc": "Lot receipt date"
+      },
+      {
+        "name": "lot_id",
+        "type": "string",
+        "format": "L########",
+        "desc": "Unique lot identifier"
+      },
+      {
+        "name": "supplier_id",
+        "type": "string",
+        "desc": "FK to suppliers.supplier_id"
+      },
+      {
+        "name": "qty_received",
+        "type": "int",
+        "range": "200-5000",
+        "desc": "Units received"
+      },
+      {
+        "name": "samples_inspected",
+        "type": "int",
+        "range": "8-500",
+        "desc": "Sample size per AQL heuristic"
+      },
+      {
+        "name": "defects_found",
+        "type": "int",
+        "desc": "Total defects in sample (capped to samples)"
+      },
+      {
+        "name": "critical",
+        "type": "int",
+        "desc": "Critical defects"
+      },
+      {
+        "name": "major",
+        "type": "int",
+        "desc": "Major defects"
+      },
+      {
+        "name": "minor",
+        "type": "int",
+        "desc": "Minor defects"
+      },
+      {
+        "name": "accept_reject",
+        "type": "category",
+        "values": [
+          "ACCEPT",
+          "REJECT"
+        ],
+        "desc": "Disposition via acceptance rule"
+      },
+      {
+        "name": "ppm_incoming",
+        "type": "float",
+        "desc": "\u2248 defects_found / qty_received * 1e6"
+      },
+      {
+        "name": "ctq_measure_mean",
+        "type": "float",
+        "desc": "CTQ mean (~5.00; unit inconsistencies auto-normalized)"
+      },
+      {
+        "name": "ctq_measure_std",
+        "type": "float",
+        "desc": "CTQ std (supplier-level imputation if missing)"
+      }
+    ]
+  },
+  "reliability_tests.csv": {
+    "description": "Weekly reliability builds & stress tests",
+    "columns": [
+      {
+        "name": "week_start",
+        "type": "date",
+        "format": "YYYY-MM-DD (Monday)",
+        "desc": "Week starting Monday"
+      },
+      {
+        "name": "build_id",
+        "type": "string",
+        "format": "B######",
+        "desc": "Build identifier (links to OQA)"
+      },
+      {
+        "name": "test_type",
+        "type": "category",
+        "values": [
+          "thermal_cycle",
+          "drop",
+          "vibration",
+          "humidity"
+        ],
+        "desc": "Stress test type"
+      },
+      {
+        "name": "units_tested",
+        "type": "int",
+        "range": "50-300",
+        "desc": "Units under test"
+      },
+      {
+        "name": "units_failed",
+        "type": "int",
+        "desc": "Failures observed (capped)"
+      },
+      {
+        "name": "mtbf_hours_est",
+        "type": "float",
+        "desc": "Estimated MTBF (type-median filled if missing)"
+      },
+      {
+        "name": "top_fail_mode",
+        "type": "category",
+        "values": [
+          "sensor_shift",
+          "lens_crack",
+          "ois_drift",
+          "seal_leak",
+          "none"
+        ],
+        "desc": "Most common fail mode"
+      },
+      {
+        "name": "pass_rate",
+        "type": "float",
+        "range": "0-1",
+        "desc": "1 - units_failed/units_tested"
+      }
+    ]
+  },
+  "oqa_yield.csv": {
+    "description": "Daily OQA & yield metrics per line/build with drift & shocks",
+    "columns": [
+      {
+        "name": "date",
+        "type": "date",
+        "format": "YYYY-MM-DD",
+        "desc": "Production date"
+      },
+      {
+        "name": "line_id",
+        "type": "category",
+        "values": [
+          "CORK-L1..L4"
+        ],
+        "desc": "Cork production line"
+      },
+      {
+        "name": "build_id",
+        "type": "string",
+        "desc": "FK to reliability_tests.build_id"
+      },
+      {
+        "name": "units_built",
+        "type": "int",
+        "range": "350-8200",
+        "desc": "Units assembled (seasonal)"
+      },
+      {
+        "name": "first_pass_yield",
+        "type": "float",
+        "range": "0.85-0.995",
+        "desc": "FPY with mean-reverting drift"
+      },
+      {
+        "name": "rework_units",
+        "type": "int",
+        "desc": "Units reworked"
+      },
+      {
+        "name": "scrap_units",
+        "type": "int",
+        "desc": "Units scrapped"
+      },
+      {
+        "name": "oqa_defects",
+        "type": "int",
+        "desc": "OQA defects logged"
+      },
+      {
+        "name": "oqa_pass_rate",
+        "type": "float",
+        "range": "0.80-0.999",
+        "desc": "OQA pass rate"
+      },
+      {
+        "name": "field_return_rate_est",
+        "type": "float",
+        "range": "0-0.02",
+        "desc": "Estimated field return rate (tiny)"
+      },
+      {
+        "name": "shift",
+        "type": "category",
+        "values": [
+          "A",
+          "B"
+        ],
+        "desc": "Shift identifier"
+      }
+    ]
+  },
+  "field_quality.csv": {
+    "description": "Monthly field quality by sales region",
+    "columns": [
+      {
+        "name": "month",
+        "type": "string",
+        "format": "YYYY-MM",
+        "desc": "Calendar month"
+      },
+      {
+        "name": "region",
+        "type": "category",
+        "values": [
+          "EU",
+          "NA",
+          "APAC",
+          "MEIA"
+        ],
+        "desc": "Sales region"
+      },
+      {
+        "name": "units_sold",
+        "type": "int",
+        "range": "10000-120000",
+        "desc": "Units sold (seasonal)"
+      },
+      {
+        "name": "field_returns",
+        "type": "int",
+        "desc": "Units returned (computed)"
+      },
+      {
+        "name": "rma_rate",
+        "type": "float",
+        "range": "0-0.03",
+        "desc": "Return rate"
+      },
+      {
+        "name": "top_field_issue",
+        "type": "category",
+        "values": [
+          "camera_focus",
+          "ois_noise",
+          "app_crash_camera",
+          "battery_swelling",
+          "none"
+        ],
+        "desc": "Top issue category"
+      }
+    ]
+  }
+}
